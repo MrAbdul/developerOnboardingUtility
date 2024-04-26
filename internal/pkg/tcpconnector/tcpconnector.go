@@ -26,12 +26,18 @@ func TestPort(ip string, port int) bool {
 	}
 	return true // Successfully connected (port is open)
 }
-
+func getNeededChannelSize(d data.ProjectData) int {
+	var size int
+	for _, project := range d.Projects {
+		size += len(project.Ips) * len(project.Ports)
+	}
+	return size
+}
 func Run(d data.ProjectData) data.Report {
 	report := data.Report{ReportVersion: "1.0"}
 
 	var wg sync.WaitGroup
-	resultsChan := make(chan data.IPResult, 100) // Buffer size can be adjusted
+	resultsChan := make(chan data.IPResult, getNeededChannelSize(d)) // Buffer size can be adjusted
 
 	// Launch goroutines to test each IP/port combination
 	for _, project := range d.Projects {

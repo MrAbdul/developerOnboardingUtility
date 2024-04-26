@@ -9,11 +9,11 @@ import (
 
 const fileName = "fileName.json"
 
-func LoadData() ProjectData {
+func LoadData() (ProjectData, error) {
 	file, err := os.Open(fileName)
 	if err != nil {
 		log.Print("problem opening file: ", err)
-		log.Fatal(err)
+		return ProjectData{}, err
 	}
 	defer func(file *os.File) {
 		err := file.Close()
@@ -27,17 +27,17 @@ func LoadData() ProjectData {
 	err = decoder.Decode(&data)
 	if err != nil {
 		log.Print("problem decoding file: ", err)
-		log.Fatal(err)
+		return ProjectData{}, err
 	}
 
-	return data
+	return data, nil
 }
 
 func PrintReportAsJSON(report Report) {
 	// Convert the report to a JSON string with indentation
 	jsonReport, err := json.MarshalIndent(report, "", "  ")
 	if err != nil {
-		log.Fatalf("Error marshaling report to JSON: %v", err)
+		log.Printf("Error marshaling report to JSON: %v", err)
 	}
 
 	// Print the JSON string

@@ -4,20 +4,29 @@ import (
 	"devOnBoardingUtility/internal/pkg/data"
 	"devOnBoardingUtility/internal/pkg/tcpconnector"
 	"fmt"
+	"log"
 )
 
 var ErrShutdown = fmt.Errorf("application was shutdown gracefully")
 
 func Start() {
-	projectData := data.LoadData()
+	projectData, err := data.LoadData()
+	if err != nil {
+		log.Printf(err.Error())
+
+	}
 	fmt.Printf("%+v\n", projectData)
 	report := tcpconnector.Run(projectData)
 	data.PrintReportAsJSON(report)
-	err, path := data.WriteHTMLFile(data.GenerateHTML(report))
+	path, err := data.WriteHTMLFile(data.GenerateHTML(report))
 	if err != nil {
+		fmt.Printf("Error writing HTML file: %v\n", err)
 		return
 	}
-	data.OpenHTMLFile(path)
+	err = data.OpenHTMLFile(path)
+	if err != nil {
+		fmt.Printf("Error opening HTML file: %v\n", err)
+	}
 
 }
 

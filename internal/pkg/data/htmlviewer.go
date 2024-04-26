@@ -2,14 +2,17 @@ package data
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strings"
 )
 
 func GenerateHTML(report Report) string {
-	html := `
+	var sb strings.Builder
+	sb.WriteString(`
 	<html>
 	<head>
 		<title>Project Report</title>
@@ -40,46 +43,51 @@ func GenerateHTML(report Report) string {
 				<th>IP Address</th>
 				<th>Port</th>
 				<th>Status</th>
-			</tr>`
+			</tr>`)
 
 	for _, project := range report.Projects {
 		for _, ipResult := range project.IPResults {
 			for _, portResult := range ipResult.PortResults {
-				html += `
+				sb.WriteString(`
 				<tr>
 					<td>` + project.ProjectName + `</td>
 					<td>` + project.Description + `</td>
 					<td>` + ipResult.IP + `</td>
 					<td>` + fmt.Sprintf("%d", portResult.Port) + `</td>
 					<td>` + portResult.Status + `</td>
-				</tr>`
+				</tr>`)
 			}
 		}
 	}
 
-	html += `
+	sb.WriteString(`
 		</table>
 	</body>
-	</html>`
+	</html>`)
 
-	return html
+	return sb.String()
 }
 
 // Function to write HTML content to a file
-func WriteHTMLFile(htmlContent string) (error, string) {
+func WriteHTMLFile(htmlContent string) (string, error) {
 	path, err := getExecutableDirectory()
 	if err != nil {
-		return err, ""
+		return "", err
 	}
 	path = path + string(os.PathSeparator) + "results.html"
 	file, err := os.Create(path)
 	if err != nil {
-		return err, ""
+		return "", err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			log.Printf("Error closing file: %v", err)
+		}
+	}(file)
 
 	_, err = file.WriteString(htmlContent)
-	return err, path
+	return path, err
 }
 
 // Function to open an HTML file in the default web browser
