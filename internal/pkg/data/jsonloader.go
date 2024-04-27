@@ -7,10 +7,10 @@ import (
 	"os"
 )
 
-const fileName = "fileName.json"
+//const fileName = "fileName.json"
 
-func LoadData() (ProjectData, error) {
-	file, err := os.Open(fileName)
+func LoadData(location string) (ProjectData, error) {
+	file, err := os.Open(location)
 	if err != nil {
 		log.Print("problem opening file: ", err)
 		return ProjectData{}, err

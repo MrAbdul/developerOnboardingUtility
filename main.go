@@ -1,7 +1,10 @@
 package main
 
-import "devOnBoardingUtility/internal/app"
+import (
+	"devOnBoardingUtility/cmd"
+)
 
 func main() {
-	app.Start()
+	cmd.Execute()
+	//app.Start()
 }
