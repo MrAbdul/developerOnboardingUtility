@@ -4,18 +4,23 @@ import (
 	"devOnBoardingUtility/internal/pkg/data"
 	"devOnBoardingUtility/internal/pkg/tcpconnector"
 	"fmt"
-	"github.com/spf13/cobra"
 	"log"
+	"path/filepath"
 )
 
 var ErrShutdown = fmt.Errorf("application was shutdown gracefully")
 
-func Start(cmd *cobra.Command, args []string) {
+func Start(configLocation string, openHTMLreport bool) {
 
-	configLocation, _ := cmd.Flags().GetString("config")
-	openHTMLreport, _ := cmd.Flags().GetBool("open-htmlreport")
-	//saveReportJson, _ := cmd.Flags().GetBool("save-report")
-	projectData, err := data.LoadData(configLocation)
+	var projectData data.ProjectData
+	var err error
+	if filepath.Ext(configLocation) == ".json" {
+		projectData, err = data.LoadData(configLocation)
+	} else if filepath.Ext(configLocation) == ".toml" {
+		projectData, err = data.LoadDataToml(configLocation)
+	} else {
+		log.Fatal("Configuration file is not a .json  or .toml file")
+	}
 	if err != nil {
 		log.Printf(err.Error())
 
