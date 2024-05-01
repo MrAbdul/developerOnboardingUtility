@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func GenerateHTML(report Report) string {
+func GenerateHTML(report Report, toaddtohosts string) string {
 	var sb strings.Builder
 	sb.WriteString(`
 	<html>
@@ -62,6 +62,8 @@ func GenerateHTML(report Report) string {
 
 	sb.WriteString(`
 		</table>
+		<h2>Hosts File Entries</h2>
+		<pre>` + toaddtohosts + `</pre>
 	</body>
 	</html>`)
 

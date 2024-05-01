@@ -3,6 +3,7 @@ package tcpconnector
 import (
 	"devOnBoardingUtility/internal/pkg/data"
 	"fmt"
+	"github.com/spf13/cobra"
 	"net"
 	"sync"
 	"time"
@@ -112,4 +113,11 @@ func contains(ips []string, ip string) bool {
 		}
 	}
 	return false
+}
+
+func CeckSpecifcPort(cmd *cobra.Command, args []string) {
+	ip, _ := cmd.Flags().GetString("ip")
+	port, _ := cmd.Flags().GetInt("port")
+	testPort := TestPort(ip, port)
+	cmd.Printf("port is : %d\n", testPort)
 }
