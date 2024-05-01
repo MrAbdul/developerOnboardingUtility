@@ -3,8 +3,9 @@ package data
 type Project struct {
 	ProjectName string   `json:"projectName" toml:"projectName"`
 	Description string   `json:"description" toml:"description"`
-	Ips         []string `json:"ips" toml:"ips"`     // List of IP addresses
-	Ports       []int    `json:"ports" toml:"ports"` // List of port numbers
+	DnsName     string   `json:"dnsName" toml:"dnsName"` // DNS name
+	Ips         []string `json:"ips" toml:"ips"`         // List of IP addresses
+	Ports       []int    `json:"ports" toml:"ports"`     // List of port numbers
 }
 type ProjectData struct {
 	ListVersion string    `json:"listVersion" toml:"listVersion"`

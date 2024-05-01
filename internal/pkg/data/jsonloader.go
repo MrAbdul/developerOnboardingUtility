@@ -9,7 +9,7 @@ import (
 
 //const fileName = "fileName.json"
 
-func LoadData(location string) (ProjectData, error) {
+func LoadDataJSON(location string) (ProjectData, error) {
 	file, err := os.Open(location)
 	if err != nil {
 		log.Print("problem opening file: ", err)
